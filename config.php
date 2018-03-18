@@ -1,6 +1,12 @@
 <?php
 
-return array(
-    'tag_separator' => '\s*,\s*',
-    'tag_template' => 'tag'
-);
+return [
+    /**
+     * Splitting tags. Default: comma separated tags.
+     */
+    'tag_separator' => ',',
+    /**
+     * Template to use.
+     */
+    'tag_template' => 'tag',
+];

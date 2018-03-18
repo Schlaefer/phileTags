@@ -1,103 +1,84 @@
-PhileTags
-========
+# PhileTags
 
-Plugin adds page tagging functionality to [Phile](http://philecms.github.io/Phile).
-Based on [Pico Tags by Szymon Kaliski](https://github.com/szymonkaliski/Phile-Tags-Plugin), but only uses the provided hooks
-and leaves the Phile core alone.
+Tag your pages. Show all pages with that tag.
 
-It gives you access to:
-* If on a `/tag/` URL, the `current_tag` variable
-* For every page, `page.meta.tags_array` --- array of tags for the `page`
+A [Phile](https://github.com/PhileCMS/Phile) plugin. [Project home](https://github.com/Schlaefer/phileTags).
 
 ## Installation
 
-* Clone this repo to the `plugins/pschmitt/tags`:
-
-```bash
-mkdir -p ~http/plugins/pschmitt
-git clone https://github.com/pschmitt/phileTags.git ~http/plugins/pschmitt/tags
-# You may consider using a submodule for this
-git submodule add http://github.com/pschmitt/phileTags.git /srv/http/plugins/pschmitt/tags
+```
+composer require siezi/phile-tags;
 ```
 
-* * *
+## Activation
 
-* **Important:** Make a new template called `tag` (i.e. `phile/themes/<your_theme>/tag.html`) which will be used when requesting a `tag/` URI.
-
-* * *
-
-* Activate it in `config.php`:
-
-```php
-$config['plugins'] = array(
-    // [...]
-    'pschmitt\\tags' => array('active' => true),
-);
 ```
-
+$config['plugins']['siezi\\phileTags'] = ['active' => true];
+```
 
 ## Usage
+
+### Add Tags to Pages
 
 Add a new `Tags` attribute to the page meta:
 
 ```
 /*
 Title: My First Blog Post
-Description: It's a blog post about javascript and php
-Author: Dan Reeves
-Robots: index,follow
-Date: 2014/04/04
 Tags: js, javascript, php
 */
 ```
 
-## Configuration
+The tags are available as `meta.tags_array` in the template. 
 
-In `config.php` you can customize:
+### Shows Tags ###
 
-* `$config['tag_template']` - which template should be used when on a `tag/` page.
-This setting defaults to `'tag'`.
+To show tags for a page and link them to the tag-page:
 
-* `$config['tag_separator']` - the separator used for splitting the tag meta(regexps, like `'\s*'` are allowed).
-Its default value is `','`.
+```twig
+{% if meta.tags_array is not empty %}
+    {% for tag in meta.tags_array %}
+        <a href="{{ base_url }}/tag/{{ tag }}">
+            #{{ tag }}
+        </a>
+    {% endfor %}
+{% endif %}
 
-## Templates
+```
 
-You can now access both the current page `meta.tags_array` and each `page.meta.tags_array` in the `pages` array:
+### Create Tag Page Template
 
-`tag.html` template may look like:
+Create a new template "tag.html" in `themes/<your_theme>/tag.html`. It is used to show all pages having a particular tag when calling  the URL `/tag/<tag-name>`.
 
-```html
+```twig
 <!DOCTYPE html>
 <head>
-	<title>{{ meta.title }}</title>
+    <title>{{ meta.title }}</title>
 </head>
 <body>
-	<h2>Posts tagged #{{ current_tag }}:</h2>
+    <h2>Posts tagged #{{ current_tag }}:</h2>
+    {% for page in pages %}
+    {% if page.meta.tags_array and current_tag in page.meta.tags_array %}
 
-	{% for page in pages %}
-	{% if page.meta.tags_array and current_tag in page.meta.tags_array %}
+        <div class="post">
 
-		<div class="post">
+            <h2><a href="{{ base_url }}/{{ page.url }}">{{ page.meta.title }}</a></h2>
+            <div class="excerpt">{{ page.content }}</div>
 
-			<h2><a href="{{ base_url }}/{{ page.url }}">{{ page.meta.title }}</a></h2>
-			<div class="excerpt">{{ page.content }}</div>
+            <span class="meta-tags">Tags:
+            {% for tag in page.meta.tags_array %}
+                <a href="{{ base_url }}/tag/{{ tag }}">#{{ tag }}</a>
+            {% endfor %}
+            </span>
 
-			<span class="meta-tags">Tags:
-			{% for tag in page.meta.tags_array %}
-				<a href="{{ base_url }}/tag/{{ tag }}">#{{ tag }}</a>
-			{% endfor %}
-			</span>
-
-		</div> <!-- // post -->
-
-	{% endif %}
-	{% endfor %}
+        </div>
+    {% endif %}
+    {% endfor %}
 
 </body>
 </html>
 ```
 
-## License
+## Configuration ##
 
-MIT
+See the `config.php`.
