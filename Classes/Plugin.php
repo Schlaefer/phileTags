@@ -38,7 +38,7 @@ class Plugin extends AbstractPlugin implements EventObserverInterface
         }
         $raw = $data['meta']['tags'];
         if (is_array($raw)) {
-            // YAML array
+            // YAML style array tags
             $tags = $raw;
         } elseif (!empty($raw) && is_string($raw)) {
             $tags = mb_split($this->settings['tag_separator'], $raw);
