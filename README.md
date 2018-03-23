@@ -1,5 +1,7 @@
 # PhileTags
 
+[![Build Status](https://travis-ci.org/Schlaefer/phileTags.svg?branch=master)](https://travis-ci.org/Schlaefer/phileTags)
+
 Tag your pages. Show all pages with that tag.
 
 A [Phile](https://github.com/PhileCMS/Phile) plugin. [Project home](https://github.com/Schlaefer/phileTags).
