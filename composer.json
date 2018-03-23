@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "phile-cms/phile": "^1.10",
+        "phile-cms/phile": "^1.10 || dev-develop",
         "phile-cms/plugin-installer-plugin": "^1.0"
     }
 }
